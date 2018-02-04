@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+	<!-- 全局setting，根据配置添加-->
+
+
+	<!--配置别名-->
+	<typeAliases>
+		<!-- 批量扫描的别名-->
+		<package name="com.chinglee.ssm.pojo"/>
+
+	</typeAliases>
+
+	<!--引入分页插件 -->
+	<plugins>
+		<plugin interceptor="com.github.pagehelper.PageInterceptor">
+			<!--分页合理化 -->
+			<property name="reasonable" value="true"/>
+		</plugin>
+	</plugins>
+	
+</configuration>

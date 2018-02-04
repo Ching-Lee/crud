@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理</title>
+    <!--引入jquery -->
+    <script src="./static/js/jquery-3.2.1.js"></script>
+    <!-- 引入样式-->
+    <link rel="stylesheet" href="./static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <script src="./static/bootstrap-3.3.7-dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="./static/js/index.js"></script>
+    <!--web.xml中如果你用的jsp1.2版本的DTD,默认EL是关闭的，必须开启 -->
+    <!--@ page isELIgnored="false"%-->
+</head>
+<body>
+
+<!--使用bootstrap搭建页面 -->
+<div class="container">
+    <!--标题 -->
+    <div class="row">
+        <div class="col-md-12">
+            <h1>用户管理</h1>
+        </div>
+    </div>
+    <!--按钮 -->
+    <div class="row">
+        <div class="col-md-4 col-md-offset-8 col-sm-4 col-sm-offset-8">
+            <button class="btn btn-primary" id="user_add_modal_btn">新增</button>
+            <button class="btn btn-danger" id="user_delete_all_btn">删除</button>
+        </div>
+    </div>
+    <br>
+    <!--显示表格数据 -->
+    <div class="row">
+        <div class="table-responsive col-md-12">
+            <table class="table table-hover" id="users_table">
+                <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" id="check_all"/>
+                    </th>
+                    <th>流水号</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>工号</th>
+                    <th>部门</th>
+                    <th>权限</th>
+                    <th>密码</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+
+
+            </table>
+        </div>
+    </div>
+    <!--显示分页信息 -->
+    <div class="row">
+        <!--分页文字信息 -->
+        <div class="col-md-6 col-sm-6" id="page_info_area">
+            当前第页，总共页，总共条记录
+        </div>
+        <!--分页导航条信息 -->
+        <div class="col-md-6 col-sm-6" id="page_nav_area">
+
+        </div>
+    </div>
+</div>
+
+<!-- 添加用户弹出的模态框 -->
+<div class="modal fade" id="userAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="userAddModalLabel">添加用户</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">姓名</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="username" class="form-control" id="userName_add_input" placeholder="姓名2-16位中英文、数字">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="password" class="form-control" id="userPassword_add_input"
+                                   placeholder="密码是6-18位英文和数字的组合">
+                            <span  class="help-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">性别</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio" name="sex" id="sex1_add_input" value="男" checked="checked"> 男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="sex" id="sex2_add_input" value="女"> 女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">工号</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="worknumber" class="form-control" id="worknumber_add_input" placeholder="请输入工号">
+                            <span  class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">部门</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="department" class="form-control" id="department_add_input" placeholder="请输入部门">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">权限</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio" name="permission" id="permission1_add_input" value="管理员"> 管理员
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="permission" id="permission2_add_input" value="普通用户" checked="checked"> 普通用户
+                            </label>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="user_save_btn">保存</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--修改用户弹出的模态框 -->
+<div class="modal fade" id="userReviseModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="userReviseModalLabel">修改用户</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">姓名</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="username" class="form-control" id="userName_revise_input" placeholder="姓名是2-5位中文或6-16位英文和数字的组合">
+                            <span class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">密码</label>
+                        <div class="col-sm-10">
+                            <input type="password" name="password" class="form-control" id="userPassword_revise_input"
+                                   placeholder="密码是6-18位英文和数字的组合">
+                            <span  class="help-block"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">性别</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio" name="sex" id="sex1_revise_input" value="男" checked="checked"> 男
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="sex" id="sex2_revise_input" value="女"> 女
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">工号</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="worknumber" class="form-control" id="worknumber_revise_input" placeholder="请输入工号">
+                            <span  class="help-block"></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">部门</label>
+                        <div class="col-sm-10">
+                            <input type="text" name="department" class="form-control" id="department_revise_input" placeholder="请输入部门">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">权限</label>
+                        <div class="col-sm-10">
+                            <label class="radio-inline">
+                                <input type="radio" name="permission" id="permission1_revise_input" value="管理员"> 管理员
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="permission" id="permission2_revise_input" value="普通用户" checked="checked"> 普通用户
+                            </label>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <button type="button" class="btn btn-primary" id="user_revise_btn">修改</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
